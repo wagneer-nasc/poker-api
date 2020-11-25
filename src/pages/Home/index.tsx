@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Text, View, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
-import Button from '../../components/Button';
 import Input from '../../components/Input';
 import {
     Container,
@@ -14,12 +12,10 @@ import {
     ContainerTextName,
     ContainerTextType,
 
-
 } from './styles';
-import pokeImage from '../../assets/poke.png';
 import api from '../../service/api';
 import Axios from 'axios';
-import { FlatList } from 'react-native-gesture-handler';
+import { Alert } from 'react-native';
 
 
 interface Pokemon {
@@ -48,12 +44,14 @@ const Home: React.FC = () => {
     const [previous, setPrevious] = useState<string>();
     const [pokemon, setPokemon] = useState<PokemonData[]>([]);
     const [pokemons, setPokemons] = useState<PokemonList[]>([]);
+    const [namePokemon, setNamePokemon] = useState<string>('');
     const pokemonData: PokemonList[] = ([]);
 
 
     useEffect(() => {
         async function loadPokemon() {
-            await api.get<Pokemon>('pokemon?limit=5').then(response => {
+
+            await api.get<Pokemon>(`pokemon?limit=5`).then(response => {
                 setNext(response.data.next);
                 setPrevious(response.data.previous);
                 setPokemon(response.data.results);
@@ -63,6 +61,7 @@ const Home: React.FC = () => {
                 })
             })
         }
+
         loadPokemon();
 
     }, []);
@@ -71,7 +70,7 @@ const Home: React.FC = () => {
         const types: string[] = [];
 
         await Axios.get(`${url}`).then(response => {
-            response.data.types.forEach((item, index) => {
+            response.data.types.forEach((item: number, index: number) => {
                 types.push(response.data.types[index].type.name);
             })
             const data: PokemonList = {
@@ -87,12 +86,42 @@ const Home: React.FC = () => {
         setPokemons(pokemonData)
     }
 
+    async function searchPokemon() {
+        if (namePokemon) {
+            await api.get(`/pokemon/${namePokemon.toLowerCase()}`).then(response => {
+                const types: string[] = [];
+                response.data.types.forEach((item: number, index: number) => {
+                    types.push(response.data.types[index].type.name);
+                })
+                const data: PokemonList = {
+                    id: response.data.id,
+                    name: response.data.name,
+                    types,
+                }
+                setPokemons([data]);
+
+            }).catch(function (err) {
+                Alert.alert('Pokemon não encontrado')
+            })
+        }
+    }
+    function openDetails(id: string) {
+        console.log(id)
+    }
 
     return (
         <Container>
             <Header titleTexto="POKÉMON CHALLENGE" />
             <ContainerInput>
                 <Input
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    returnKeyType="send"
+                    onSubmitEditing={() => {
+                        searchPokemon();
+                    }}
+                    value={namePokemon}
+                    onChangeText={setNamePokemon}
                     placeholder="Type the Pokémon name"
                     name="search"
                     icon="search"
@@ -100,10 +129,10 @@ const Home: React.FC = () => {
             </ContainerInput>
             <PokemonFlatList
                 data={pokemons}
-                keyExtractor={(pokemon: PokemonList) => pokemon.id}
+                keyExtractor={(pokemon: PokemonList) => pokemon.id.toString()}
                 renderItem={({ item }: { item: PokemonList }) => (
                     <>
-                        <ContainerListInfo>
+                        <ContainerListInfo onPress={() => {openDetails(item.id)}}>
                             <ImageStoreList source={
                                 {
                                     uri: `https://pokeres.bastionbot.org/images/pokemon/${item.id}.png`
@@ -117,17 +146,10 @@ const Home: React.FC = () => {
                                 <TextName> {item.types[0]}</TextName>
                                 <TextName> , {item.types[1]}</TextName>
                             </ContainerTextType>
-
-
                         </ContainerListInfo>
                     </>
                 )}
             />
-
-
-
-
-
         </Container>
 
     );
