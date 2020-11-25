@@ -16,6 +16,7 @@ import {
 import api from '../../service/api';
 import Axios from 'axios';
 import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 
 interface Pokemon {
@@ -40,6 +41,7 @@ export interface PokemonList {
 
 
 const Home: React.FC = () => {
+    const navigation = useNavigation();
     const [next, setNext] = useState<string>();
     const [previous, setPrevious] = useState<string>();
     const [pokemon, setPokemon] = useState<PokemonData[]>([]);
@@ -106,7 +108,7 @@ const Home: React.FC = () => {
         }
     }
     function openDetails(id: string) {
-        console.log(id)
+        navigation.navigate('Details', {id});
     }
 
     return (
