@@ -1,13 +1,29 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native'; 
-import  Icon  from 'react-native-vector-icons/Feather';
+import { ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import Header from '../../components/Header';
 import api from '../../service/api';
 import {
-    ContainerImageName, ImageStoreList, TextName, ContainerInfoWeightHeight,
-    TextWight, TextHeight, ContainerLabel, TextLabel, TextStats, ContainerTextStats, Container,
-    ContainerInfo, TextInfo, TextLabelInfo, ColorTextInfo,ContainerButtonBack, TextButtonBack
+    ContainerImageName,
+    ImagePokemonList,
+    TextName,
+    ContainerInfoWeightHeight,
+    TextWight,
+    TextHeight,
+    ContainerLabel,
+    TextLabel,
+    TextStats,
+    ContainerTextStats,
+    Container,
+    ContainerInfo,
+    TextInfo,
+    TextLabelInfo,
+    ColorTextInfo,
+    ContainerButtonBack,
+    TextButtonBack,
+    TextIDPokemon,
+    ContainerIdPokemon
 } from './styles';
 
 interface PokemonDetailsRouteParams {
@@ -30,12 +46,11 @@ const Details: React.FC = () => {
     useEffect(() => {
         const stats: string[] = [];
         api.get(`/pokemon/${params.id}`).then(response => {
-
-            response.data.stats.forEach((item: number, index: number) => { 
+            response.data.stats.forEach((item: number, index: number) => {
                 stats.push(
                     response.data.stats[index].stat.name,
                     response.data.stats[index].base_stat,
-                ) 
+                )
             })
 
             const pokemonDetails: PokemonDetails = {
@@ -45,73 +60,75 @@ const Details: React.FC = () => {
                 weight: response.data.weight,
                 stats
             }
-            setPokemons(pokemonDetails) 
+            setPokemons(pokemonDetails)
         })
 
     }, [])
 
     return (
         <>
-         <Header titleTexto="POKÉMON CHALLENGE" />
-         <ContainerButtonBack onPress={() =>  navigation.goBack()}>
-             <Icon name="arrow-left"size={24} color="#FF9000" />
-             <TextButtonBack>Back</TextButtonBack>
-         </ContainerButtonBack>
-         <ScrollView>
-            <Container>
-                <ContainerImageName>
+            <Header titleTexto="POKÉMON CHALLENGE" />
+            <ContainerButtonBack onPress={() => navigation.goBack()}>
+                <Icon name="arrow-left" size={24} color="#FF9000" />
+                <TextButtonBack>Back</TextButtonBack>
+            </ContainerButtonBack>
 
-                    <ImageStoreList source={
-                        {
-                            uri: `https://pokeres.bastionbot.org/images/pokemon/${pokemons?.id}.png`
-                        }} />
-                    <TextName>{pokemons?.name}</TextName>
-                </ContainerImageName>
-                <ContainerInfoWeightHeight>
-                    <TextWight>{pokemons?.weight} KG</TextWight>
-                    <TextHeight>{pokemons?.height} M</TextHeight>
+            <ScrollView>
+                <Container>
 
-                </ContainerInfoWeightHeight>
-                <ContainerLabel>
-                    <TextLabel>Weight</TextLabel>
-                    <TextLabel>Height</TextLabel>
-                </ContainerLabel>
-                <ContainerTextStats>
-                    <TextStats>Stats</TextStats>
-                </ContainerTextStats>
-                <ContainerInfo>
+                    <ContainerImageName>
+                        <ContainerIdPokemon>
+                            <TextIDPokemon># {params.id}</TextIDPokemon>
+                        </ContainerIdPokemon>
+                        <ImagePokemonList source={
+                            {
+                                uri: `https://pokeres.bastionbot.org/images/pokemon/${pokemons?.id}.png`
+                            }} />
+                        <TextName>{pokemons?.name}</TextName>
+                    </ContainerImageName>
 
-                    <TextLabelInfo> {pokemons?.stats[0].toLocaleUpperCase()}</TextLabelInfo>
-                    <ColorTextInfo>
-                        <TextInfo> {pokemons?.stats[1]}</TextInfo>
-                    </ColorTextInfo>
+                    <ContainerInfoWeightHeight>
+                        <TextWight>{pokemons?.weight} KG</TextWight>
+                        <TextHeight>{pokemons?.height} M</TextHeight>
+                    </ContainerInfoWeightHeight>
 
-                </ContainerInfo>
-                <ContainerInfo>
+                    <ContainerLabel>
+                        <TextLabel>Weight</TextLabel>
+                        <TextLabel>Height</TextLabel>
+                    </ContainerLabel>
 
-                    <TextLabelInfo>ATK</TextLabelInfo>
-                    <ColorTextInfo>
-                        <TextInfo> {pokemons?.stats[3]}</TextInfo>
-                    </ColorTextInfo>
+                    <ContainerTextStats>
+                        <TextStats>Stats</TextStats>
+                    </ContainerTextStats>
 
-                </ContainerInfo>
-                <ContainerInfo>
+                    <ContainerInfo>
+                        <TextLabelInfo> {pokemons?.stats[0].toLocaleUpperCase()}</TextLabelInfo>
+                        <ColorTextInfo>
+                            <TextInfo> {pokemons?.stats[1]}</TextInfo>
+                        </ColorTextInfo>
+                    </ContainerInfo>
 
-                    <TextLabelInfo>DEF</TextLabelInfo>
-                    <ColorTextInfo>
-                        <TextInfo> {pokemons?.stats[5]}</TextInfo>
-                    </ColorTextInfo>
+                    <ContainerInfo>
+                        <TextLabelInfo>ATK</TextLabelInfo>
+                        <ColorTextInfo>
+                            <TextInfo> {pokemons?.stats[3]}</TextInfo>
+                        </ColorTextInfo>
+                    </ContainerInfo>
 
-                </ContainerInfo>
-                <ContainerInfo>
+                    <ContainerInfo>
+                        <TextLabelInfo>DEF</TextLabelInfo>
+                        <ColorTextInfo>
+                            <TextInfo> {pokemons?.stats[5]}</TextInfo>
+                        </ColorTextInfo>
+                    </ContainerInfo>
 
-                    <TextLabelInfo>SPD</TextLabelInfo>
-                    <ColorTextInfo>
-                        <TextInfo> {pokemons?.stats[11]}</TextInfo>
-                    </ColorTextInfo>
-
-                </ContainerInfo>
-            </Container>
+                    <ContainerInfo>
+                        <TextLabelInfo>SPD</TextLabelInfo>
+                        <ColorTextInfo>
+                            <TextInfo> {pokemons?.stats[11]}</TextInfo>
+                        </ColorTextInfo>
+                    </ContainerInfo>
+                </Container>
             </ScrollView>
         </>
     );

@@ -5,13 +5,7 @@ import { PokemonList } from './index';
 export const Container = styled.View`
 flex: 1;
 `;
-
-export const StoreImage = styled.Image`
-width: 56px;
-height: 56px;
-border-radius: 28px;
-`;
-
+ 
 export const PokemonFlatList = styled(FlatList as new () => FlatList<PokemonList>)`
  padding: 10px 25px 16px;    
 `;
@@ -24,12 +18,10 @@ align-items: center;
 margin-bottom: 10px;
 
 `;
-export const ImageStoreList = styled.Image`
+export const ImagePokemonList = styled.Image`
 width: 200px;
 height: 200px;
 border-radius: 20px;
-
-   
 `;
 
 export const TextoInfo = styled.Text`
@@ -47,7 +39,6 @@ export const ContainerTextName = styled.View`
     padding: 10px;
 `;
 
-
 export const ContainerTextType = styled.View`
     flex-direction: row;
     padding: 10px;
@@ -58,11 +49,7 @@ font-family: 'RobotoSlab-Regular';
 font-size: 20px;
 margin-top: 10px;
  `;
-
-
-export const TextType = styled.Text`
  
-`;
 export const TextName = styled.Text`
 color: #FF9000;
 font-family: 'RobotoSlab-Medium';
@@ -76,14 +63,20 @@ export const ContainerButtonNextPrevious = styled.View`
     
     flex-direction: row; 
     align-items: center;
-    justify-content: space-around;
-   
-    
-
+    justify-content: space-around;      
  `;
-export const ButtonNext = styled(RectButton)`
-  
+
+export const ButtonNext = styled(RectButton)``;
+
+export const ButtonPrevious = styled(RectButton)``;
+
+export const ContainerIdPokemon = styled.View`
+   margin-right: 250px;
 `;
-export const ButtonPrevious = styled(RectButton)`
+
+export const TextIDPokemon = styled.Text`
+font-size: 24px;
+color: #666360;
+font-family: 'RobotoSlab-Medium';
  
 `;

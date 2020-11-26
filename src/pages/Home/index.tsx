@@ -1,11 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
+import Icon from 'react-native-vector-icons/Feather';
+import api from '../../service/api';
+import Axios from 'axios';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import {
     Container,
     PokemonFlatList,
     ContainerListInfo,
-    ImageStoreList,
+    ImagePokemonList,
     TextName,
     TextLabel,
     ContainerInput,
@@ -14,14 +19,9 @@ import {
     ContainerButtonNextPrevious,
     ButtonNext,
     ButtonPrevious,
-
+    ContainerIdPokemon,
+    TextIDPokemon,
 } from './styles';
-import api from '../../service/api';
-import Axios from 'axios';
-import { Alert, Text, TextInputProps } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Feather';
-
 
 interface Pokemon {
     count: number;
@@ -31,15 +31,12 @@ interface Pokemon {
         name: string;
         url: string;
     }]
-
 }
-
 export interface PokemonList {
     id: string;
     name: string;
     types: string[]
 }
-
 
 const Home: React.FC = () => {
     const navigation = useNavigation();
@@ -47,7 +44,7 @@ const Home: React.FC = () => {
     const [previous, setPrevious] = useState<string>('');
     const [pokemons, setPokemons] = useState<PokemonList[]>([]);
     const [namePokemon, setNamePokemon] = useState<string>('');
-    const [urlPokemonData, setUrlPokemonData] = useState<string>('pokemon?offset=10&limit=10'); 
+    const [urlPokemonData, setUrlPokemonData] = useState<string>('pokemon?offset=0&limit=10');
     const pokemonData: PokemonList[] = ([]);
 
 
@@ -133,7 +130,7 @@ const Home: React.FC = () => {
                     }}
                     enablesReturnKeyAutomatically={true}
                     value={namePokemon}
-                    onChangeText={setNamePokemon}  
+                    onChangeText={setNamePokemon}
                     placeholder="Type the Pokémon name"
                     name="search"
                     icon="search"
@@ -146,7 +143,11 @@ const Home: React.FC = () => {
                     renderItem={({ item }: { item: PokemonList }) => (
                         <>
                             <ContainerListInfo onPress={() => { openDetails(item.id) }}>
-                                <ImageStoreList source={
+                                <ContainerIdPokemon>
+                                    <TextIDPokemon># {item.id}</TextIDPokemon>
+                                </ContainerIdPokemon>
+
+                                <ImagePokemonList source={
                                     {
                                         uri: `https://pokeres.bastionbot.org/images/pokemon/${item.id}.png`
                                     }} />
@@ -161,7 +162,8 @@ const Home: React.FC = () => {
                                 </ContainerTextType>
                             </ContainerListInfo>
                         </>
-                    )}
+                    )
+                    }
                 />
             )}
             <>
@@ -172,10 +174,9 @@ const Home: React.FC = () => {
                     <ButtonNext onPress={() => { nextPokemon() }}>
                         <Icon name="chevron-right" size={25} color="#FF9000" />
                     </ButtonNext>
-
                 </ContainerButtonNextPrevious>
             </>
-        </Container>
+        </Container >
 
     );
 
